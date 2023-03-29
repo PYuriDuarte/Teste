@@ -19,6 +19,21 @@
                 return false;
             }
         }
+        public bool Editar_Autor(string novo_nome, Autores autor)
+        {
+            try
+            {
+                bool edicao = false;
+                autor.nome_autor = novo_nome;
+                edicao = true;
+                return edicao;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao cadastrar o autor, detalhes: " + ex.Message);
+                return false;
+            }
+        }
     }
 
     public class Autores_Colecao : List<Autores>{

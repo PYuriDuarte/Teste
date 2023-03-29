@@ -1,4 +1,5 @@
 ﻿
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using Teste;
 
@@ -9,6 +10,7 @@ Autores_Colecao autores  = new Autores_Colecao();
 Livros_Colecao livros  = new Livros_Colecao();
 
 int escolha;
+
 
 do
 {
@@ -21,10 +23,10 @@ do
     Console.WriteLine("");
     Console.WriteLine("1 - Cadastrar autor"); //ok
     Console.WriteLine("2 - Mostrar autores cadastrados"); //ok 
-    Console.WriteLine("3 - Editar autores"); //ok 
+    Console.WriteLine("3 - Editar autores"); //andamento 
     Console.WriteLine("4 - Cadastrar livro"); //ok
     Console.WriteLine("5 - Consultar livro"); //ok
-    Console.WriteLine("6 - Editar livros"); //ok 
+    Console.WriteLine("6 - Editar livros"); //andamento 
     Console.WriteLine("7 - Excluir livro"); //ok
     Console.WriteLine("8 - Sair do sistema"); //ok
 
@@ -100,18 +102,81 @@ do
                 {
                     Console.WriteLine($"{i + 1}. {autores[i].nome_autor}");
                 }
+
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
             }
             else
             {
-                Console.WriteLine("vazio");
+                Console.WriteLine("Vazio");
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
             }
-            
+            break;
+        case 3:
 
-            Console.WriteLine("");
-            Console.WriteLine("Aperte \"ENTER\" para voltar");
+            Console.Clear();
 
-            Console.ReadLine();
+            if (autores.Count > 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Digite o número do autor que você deseja editar.");
+                Console.WriteLine("");
 
+                Autores autor = new Autores();
+
+                for (int i = 0; i < autores.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {autores[i].nome_autor}");
+                }
+                
+                escolha = Convert.ToInt32(Console.ReadLine());
+
+                while (escolha > autores.Count || escolha <= 0)
+                {
+                    Console.Write("Autor inválido, informe novamente o código do autor: ");
+
+                    escolha = Convert.ToInt32(Console.ReadLine());
+                }
+
+                Console.WriteLine("");
+                Console.WriteLine("Digite um novo nome para o autor.");
+
+                string novaEscolha = Console.ReadLine();
+
+                // Função para percorrer todos os autores e verificar se o novo já está na lista
+
+                foreach (Autores a2 in autores)
+                {
+                    if (a2.nome_autor.ToUpper().Equals(novaEscolha.ToUpper()))
+                    {
+                        Console.WriteLine("Já foi cadastrado um autor com esse nome.");
+                        Console.WriteLine("");
+                        Console.WriteLine("Digite um nome de autor valido.");
+                        Console.WriteLine("");
+                        novaEscolha = Console.ReadLine();
+                        break;
+                    }
+                }
+
+                if (autor.Editar_Autor(novaEscolha, autores[escolha - 1]) == true)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Autor editado com sucesso!");
+                }
+                
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Você não pode editar algo inexistente, bobo.");
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
+            }
             break;
         case 4:
             Console.Clear();
@@ -194,16 +259,41 @@ do
                 {
                     Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {livros[i].autor.nome_autor})");
                 }
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
             }
             else
             {
                 Console.WriteLine("Vazio");
-            }
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
+            }            
+            break;
+        case 6:
+            Console.Clear();
 
             Console.WriteLine("");
-            Console.WriteLine("Aperte \"ENTER\" para voltar");
-            Console.ReadLine();
-            break;
+            Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
+            Console.WriteLine("");
+
+            if (livros.Count > 0)
+            {
+                for (int i = 0; i < livros.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {livros[i].autor.nome_autor})");
+                }
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Você não pode editar algo inexistente, bobo.");
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                Console.ReadLine();
+            }
+            break;            
         case 7:
             Console.Clear();
 
@@ -211,43 +301,56 @@ do
             Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
             Console.WriteLine("");
 
-            for (int i = 0; i < livros.Count; i++)
+            if (livros.Count > 0)
             {
-                Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {autores[i].nome_autor})");
-            }
 
-            Console.WriteLine("");
-            Console.Write("Selecione o número do livro que deseja excluir: ");
-            escolha = Convert.ToInt32(Console.ReadLine());
 
-            while (escolha > autores.Count || escolha <= 0)
-            {
-                Console.Write("O número do livro selecionado não existe no nosso banco de dados, escolha um número válido: ");
-                escolha = Convert.ToInt32(Console.ReadLine());
-            }
 
-            Console.WriteLine("");
+                for (int i = 0; i < livros.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {autores[i].nome_autor})");
+                }
 
-            Console.WriteLine($"Tem certeza que deseja excluir o livro {livros[escolha - 1].nome_livro}? [S/N]");
-            string letra = Console.ReadLine().ToLower();
-
-            if (letra == "s")
-            {
-                livros.RemoveAt(escolha - 1);
-                Console.WriteLine("O Livro foi removido com sucesso!");
                 Console.WriteLine("");
-                Console.WriteLine("Aperte \"ENTER\" para finalizar");
-                Console.ReadLine();
+                Console.Write("Selecione o número do livro que deseja excluir: ");
+                escolha = Convert.ToInt32(Console.ReadLine());
 
+                while (escolha > autores.Count || escolha <= 0)
+                {
+                    Console.Write("O número do livro selecionado não existe no nosso banco de dados, escolha um número válido: ");
+                    escolha = Convert.ToInt32(Console.ReadLine());
+                }
+
+                Console.WriteLine("");
+
+                Console.WriteLine($"Tem certeza que deseja excluir o livro {livros[escolha - 1].nome_livro}? [S/N]");
+                string letra = Console.ReadLine().ToLower();
+
+                if (letra == "s")
+                {
+                    livros.RemoveAt(escolha - 1);
+                    Console.WriteLine("O Livro foi removido com sucesso!");
+                    Console.WriteLine("");
+                    Console.WriteLine("Aperte \"ENTER\" para finalizar");
+                    Console.ReadLine();
+
+                }
+                else if (letra == "n")
+                {
+                    Console.WriteLine("Aperte \"ENTER\" para voltar ao ínicio.");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine($"Para excluir o livro {livros[escolha - 1].nome_livro}, aperte \"S\" ou  \"N\"");
+                    Console.ReadLine();
+                }
             } 
-            else if(letra == "n")
-            {
-                Console.WriteLine("Aperte \"ENTER\" para voltar ao ínicio.");
-                Console.ReadLine();
-            }
             else
             {
-                Console.WriteLine($"Para excluir o livro {livros[escolha - 1].nome_livro}, aperte \"S\" ou  \"N\"");
+                Console.WriteLine("Vazio.");
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para voltar ao ínicio.");
                 Console.ReadLine();
             }
             break;

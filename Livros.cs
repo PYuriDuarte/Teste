@@ -26,6 +26,21 @@ namespace Teste
                 return false;
             }
         }
+        public bool Editar_Livro(string novo_livro, Livros livro)
+        {
+            try
+            {
+                bool edicao = false;
+                livro.nome_livro = novo_livro;
+                edicao = true;
+                return edicao;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao cadastrar o autor, detalhes: " + ex.Message);
+                return false;
+            }
+        }
     }
     public class Livros_Colecao : List<Livros>
     {
