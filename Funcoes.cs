@@ -17,6 +17,14 @@ namespace Teste
         {
             return valor1 + valor2;
         }
+        public bool Verifica_Digito(string digito1)
+        {
+            return int.TryParse(digito1, out int num);
+        }
+        public bool Verifica_Nomes(string nome1)
+        {
+            return nome1.Replace("\n", "").Replace("\r", "").Trim().Equals(string.Empty);
+        }
 
     }
 }

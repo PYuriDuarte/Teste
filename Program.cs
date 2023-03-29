@@ -1,34 +1,10 @@
 ﻿
-//// 1ª - Escrever um algoritmo que mostre no console os números de 1 a 10.
-//// 2ª - Escrever um algoritmo que mostre no console os números pares entre 1 - 20.
-//// 3ª - Escrever um algoritmo que mostre no console a soma dos números pares entre 2 - 20.
-//// 4ª - Escrever um algoritmo que mostre no console a média das 3 notas informadas pelo usuário.
-//// 5ª - Escrever um algoritmo que realize uma validação em cada nota informada no exercício anterior.
-
-//// Escopo de variáveis.
-//// i++ -> i = i + 1;
-////Console.WriteLine("");
-////string ex = Console.ReadLine();
-
 using System.Runtime.CompilerServices;
 using Teste;
 
-//Autores autores = new Autores();
-
-//bool autor_cadastrado = autores.Cadastrar_Autor("Yuri");
-
-//if (autor_cadastrado == true)
-//{
-//    Console.WriteLine("O nome do autor cadastro foi: " + autores.nome_autor);
-//}
-//else
-//{
-//    Console.WriteLine("Não foi possível cadastrar esse autor");
-//}
-
 // Menu
 
-
+Funcoes f1 = new Funcoes();
 Autores_Colecao autores  = new Autores_Colecao();
 Livros_Colecao livros  = new Livros_Colecao();
 
@@ -43,46 +19,73 @@ do
     Console.WriteLine("");
     Console.WriteLine("Escolha uma opção:");
     Console.WriteLine("");
-    Console.WriteLine("1 - Cadastrar autor");
-    Console.WriteLine("2 - Mostrar autores cadastrados");
-    Console.WriteLine("3 - Cadastrar livro");
-    Console.WriteLine("4 - Consultar livro");
-    Console.WriteLine("5 - Excluir livro");
-    Console.WriteLine("6 - Sair do sistema");
+    Console.WriteLine("1 - Cadastrar autor"); //ok
+    Console.WriteLine("2 - Mostrar autores cadastrados"); //ok 
+    Console.WriteLine("3 - Editar autores"); //ok 
+    Console.WriteLine("4 - Cadastrar livro"); //ok
+    Console.WriteLine("5 - Consultar livro"); //ok
+    Console.WriteLine("6 - Editar livros"); //ok 
+    Console.WriteLine("7 - Excluir livro"); //ok
+    Console.WriteLine("8 - Sair do sistema"); //ok
 
-    escolha = Convert.ToInt32(Console.ReadLine());
+    string opcao = Console.ReadLine();               
+    escolha = f1.Verifica_Digito(opcao) == false ? 0 : Convert.ToInt32(opcao);     //validação para tentar converter um vazio ou um caracter diferente, para o tipo escolhido ("int" no caso).
 
     switch (escolha)
     {
-        case 1:
-
+        case 1:            
             Console.WriteLine("Informe o nome do autor: ");
             string nome_autor = Console.ReadLine();
 
-            Autores autor = new Autores();
+            bool autor_ja_cadastrado = false; //variavel bool para validação de cadastro de mais de um autor de mesmo nome.
 
-            if (autor.Cadastrar_Autor(nome_autor) == true)
-            {
-                Console.Clear();
+            if (f1.Verifica_Nomes(nome_autor) == false)
+            {               
+                foreach (Autores a1 in autores)
+                {
+                    if (a1.nome_autor.ToUpper().Equals(nome_autor.ToUpper()))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Já foi cadastrado um autor com esse nome.");
+                        Console.WriteLine("Aperte \"ENTER\" para voltar");
+                        Console.ReadLine(); // ReadLine vazio para esperar um enter e não avançar sem o usuario permitir.
+                        autor_ja_cadastrado = true;
+                        break;
+                    }
+                }
 
-                Console.WriteLine($"O {nome_autor} foi cadastrado com sucesso.");
-                autores.Add(autor);
+                if (autor_ja_cadastrado == false)
+                {
+                    Autores autor = new Autores();
 
-                Console.WriteLine("");
+                    if (autor.Cadastrar_Autor(nome_autor) == true)
+                    {
+                        Console.Clear();
 
-                Console.WriteLine("Aperte \"ENTER\" para voltar");
+                        Console.WriteLine($"O {nome_autor} foi cadastrado com sucesso.");
+                        autores.Add(autor);
 
-                Console.ReadLine();
+                        Console.WriteLine("");
+
+                        Console.WriteLine("Aperte \"ENTER\" para voltar");
+
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Não foi possível cadastrar o autor: {nome_autor}");
+                        Console.WriteLine("");
+                        Console.WriteLine("Aperte \"ENTER\" para voltar");
+
+                        Console.ReadLine();
+                    }
+                }
             }
             else
             {
-                Console.WriteLine($"Não foi possível cadastrar o autor: {nome_autor}");
-                Console.WriteLine("");
-                Console.WriteLine("Aperte \"ENTER\" para voltar");
-
+                Console.WriteLine("Opção invalida.");
                 Console.ReadLine();
             }
-
             break;
         case 2:
             Console.Clear();
@@ -91,18 +94,26 @@ do
             Console.WriteLine("Lista dos Autores cadastrados no sistema: ");
             Console.WriteLine("");
 
-            for (int i = 0; i < autores.Count; i++)
+            if (autores.Count > 0)
             {
-                Console.WriteLine($"{i+1} - {autores[i].nome_autor}");
+                for (int i = 0; i < autores.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {autores[i].nome_autor}");
+                }
             }
+            else
+            {
+                Console.WriteLine("vazio");
+            }
+            
 
+            Console.WriteLine("");
             Console.WriteLine("Aperte \"ENTER\" para voltar");
 
             Console.ReadLine();
 
             break;
-        case 3:
-
+        case 4:
             Console.Clear();
 
             Console.WriteLine("");
@@ -116,249 +127,141 @@ do
 
             escolha = Convert.ToInt32(Console.ReadLine());
 
-            do
+            while (escolha > autores.Count || escolha <= 0)
             {
+                Console.Write("Autor inválido, informe novamente o código do autor: ");
 
-            }while(escolha <= autores.Count);
+                escolha = Convert.ToInt32(Console.ReadLine());
+            }
 
-            //Console.WriteLine("Informe o nome do autor: ");
-            //string nome_livro = Console.ReadLine();
+            Console.Write("Informe o nome do livro: ");
 
-            //Livros livro = new Livros();
+            string nome_livro = Console.ReadLine();
 
-            //if (livro.Cadastrar_Livro(nome_livro) == true)
-            //{
-            //    Console.Clear();
+            bool livro_ja_cadastrado = false;
 
-            //    Console.WriteLine($"O {nome_livro} foi cadastrado com sucesso.");
-            //    livros.Add(livro);
+            foreach (Livros l1 in livros)
+            {
+                if (l1.nome_livro.ToUpper().Equals(nome_livro.ToUpper()) && l1.autor.nome_autor.Equals(autores[escolha - 1].nome_autor))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Já foi cadastrado um livro com esse nome e autor.");
+                    Console.WriteLine("");
+                    Console.WriteLine("Aperte \"ENTER\" para voltar");
+                    Console.ReadLine();
+                    livro_ja_cadastrado = true;
+                    break;
+                }
+            }
 
-            //    Console.WriteLine("");
+            if (livro_ja_cadastrado == false)
+            {
+                Livros livro = new Livros();
 
-            //    Console.WriteLine("Aperte \"ENTER\" para voltar");
+                if (livro.Cadastrar_Livro(nome_livro, autores[escolha - 1]) == true)
+                {
+                    Console.Clear();
 
-            //    Console.ReadLine();
-            //}
-            Console.ReadLine();
+                    Console.WriteLine($"O {nome_livro} foi cadastrado com sucesso.");
+                    livros.Add(livro);
 
+                    Console.WriteLine("");
+
+                    Console.WriteLine("Aperte \"ENTER\" para voltar");
+
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine($"Não foi possível cadastrar o livro: {nome_livro}");
+                    Console.WriteLine("");
+                    Console.WriteLine("Aperte \"ENTER\" para voltar");
+
+                    Console.ReadLine();
+                }
+            }
             break;
         case 5:
+            Console.Clear();
+
+            Console.WriteLine("");
+            Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
+            Console.WriteLine("");            
+
+            if( livros.Count > 0)
+            {
+                for (int i = 0; i < livros.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {livros[i].autor.nome_autor})");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Vazio");
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("Aperte \"ENTER\" para voltar");
+            Console.ReadLine();
+            break;
+        case 7:
+            Console.Clear();
+
+            Console.WriteLine("");
+            Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
+            Console.WriteLine("");
+
+            for (int i = 0; i < livros.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {autores[i].nome_autor})");
+            }
+
+            Console.WriteLine("");
+            Console.Write("Selecione o número do livro que deseja excluir: ");
+            escolha = Convert.ToInt32(Console.ReadLine());
+
+            while (escolha > autores.Count || escolha <= 0)
+            {
+                Console.Write("O número do livro selecionado não existe no nosso banco de dados, escolha um número válido: ");
+                escolha = Convert.ToInt32(Console.ReadLine());
+            }
+
+            Console.WriteLine("");
+
+            Console.WriteLine($"Tem certeza que deseja excluir o livro {livros[escolha - 1].nome_livro}? [S/N]");
+            string letra = Console.ReadLine().ToLower();
+
+            if (letra == "s")
+            {
+                livros.RemoveAt(escolha - 1);
+                Console.WriteLine("O Livro foi removido com sucesso!");
+                Console.WriteLine("");
+                Console.WriteLine("Aperte \"ENTER\" para finalizar");
+                Console.ReadLine();
+
+            } 
+            else if(letra == "n")
+            {
+                Console.WriteLine("Aperte \"ENTER\" para voltar ao ínicio.");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine($"Para excluir o livro {livros[escolha - 1].nome_livro}, aperte \"S\" ou  \"N\"");
+                Console.ReadLine();
+            }
+            break;
+        case 8:
             Console.WriteLine("Saindo da livraria do Yuri...");
 
             Console.ReadLine();
             break;
         default:
+            Console.WriteLine("Opção inválida...");
+            Console.WriteLine("");
+            Console.WriteLine("Aperte \"ENTER\" para finalizar");
+            Console.ReadLine();
             break;
     }       
-} while (escolha != 6);
-
-
-
-
-//switch (teste)
-//{
-//    case 1:
-//        Console.WriteLine("1");
-//        break;
-//    case 2: Console.WriteLine("2"); break;
-//    case 3: Console.WriteLine("3"); break;
-//    case 4: Console.WriteLine("4"); break;
-//    case 5: Console.WriteLine("5"); break;
-//    default:
-//        Console.WriteLine("Baidu");
-//        break;
-//}
-
-//// 1ª Exercício.
-
-//for (int i = 1; i <= 10; i++)
-//{
-//    Console.WriteLine(i);
-//}
-
-//Console.WriteLine("-------------------------");
-
-//// 2ª Exercício.
-
-//for (int i = 1; i <= 20; i++)
-//{
-//    if (i%2 == 0)
-//    {
-//        Console.WriteLine(i);        
-//    }
-//}
-
-//Console.WriteLine("-------------------------");
-
-//// 3ª Exercício.
-
-//int soma = 0;
-
-//for (int i = 2; i <= 20; i+=2)
-//{
-//    soma += i;
-//}
-
-//Console.WriteLine(soma);
-
-//Console.WriteLine("-------------------------");
-
-//// 4ª Exercício.
-
-////Console.WriteLine("Digite um a nota1:");
-////double n1 = Convert.ToDouble(Console.ReadLine());
-////Console.WriteLine("Digite um a nota2:");
-////double n2 = Convert.ToDouble(Console.ReadLine());
-////Console.WriteLine("Digite um a nota3:");
-////double n3 = Convert.ToDouble(Console.ReadLine());
-////Console.WriteLine("A sua média é:" + (n1 + n2 + n3)/3);
-
-////Console.WriteLine("-------------------------");
-
-////// 5ª Exercício.
-
-////if (n1 < 0 || n1 > 10)
-////{
-////    Console.WriteLine("Nota 1 invalida...Informe uma nota entre 0 e 10");
-////    return;
-////}
-////if (n2 < 0 || n2 > 10)
-////{
-////    Console.WriteLine("Nota 2 invalida...Informe uma nota entre 0 e 10");
-////    return;
-////}
-////if (n3 < 0 || n3 > 10)
-////{
-////    Console.WriteLine("Nota 3 invalida...Informe uma nota entre 0 e 10");
-////    return;
-////}
-
-//Console.WriteLine("-------------------------");
-
-//// 6ª Exercício.
-
-////Console.WriteLine("Digite um a nota1:");
-////double n1 = Convert.ToDouble(Console.ReadLine());
-////Console.WriteLine("Digite um a nota2:");
-////double n2 = Convert.ToDouble(Console.ReadLine());
-////Console.WriteLine("Digite um a nota3:");
-////double n3 = Convert.ToDouble(Console.ReadLine());
-
-
-
-////if (n1 < 0 || n1 > 10)
-////{
-////    Console.WriteLine("Nota 1 invalida...Informe uma nota entre 0 e 10");
-////}
-////else if (n2 < 0 || n2 > 10)
-////{
-////    Console.WriteLine("Nota 2 invalida...Informe uma nota entre 0 e 10");
-////}
-////else if (n3 < 0 || n3 > 10)
-////{
-////    Console.WriteLine("Nota 3 invalida...Informe uma nota entre 0 e 10");
-////}
-////else
-////{
-////    Console.WriteLine("A sua média é:" + (n1 + n2 + n3) / 3);
-////}
-
-//Console.WriteLine("-------------------------");
-
-// 7ª Exercício.
-
-//Console.WriteLine("Digite um número: ");
-//int imp = Convert.ToInt32(Console.ReadLine());
-//int count = 1;
-
-//int lista_numeros = imp;
-
-
-//for (int i = 2; i <= 20; i ++)
-//{    
-//    if ((i%2) == 1) {
-//        Console.WriteLine(i);
-//    }    
-//}
-//while (count <= 6)
-//{
-//    if ((lista_numeros % 2) == 1)
-//    {
-//        Console.WriteLine(lista_numeros);
-//        count++;
-//    }        
-
-//    lista_numeros++;
-//}
-
-//Console.WriteLine("Digite o primeiro número: ");
-//int numb1 = Convert.ToInt32(Console.ReadLine());
-//Console.WriteLine("Digite o segundo número: ");
-//int numb2 = Convert.ToInt32(Console.ReadLine());
-//int soma = 0;
-
-//if (numb1 > numb2)
-//{
-//    int temp = numb1;
-//    numb1 = numb2;
-//    numb2 = temp;
-//}
-
-
-//for (int i = numb1 + 1; i < numb2; i++)
-//{
-//    if (Math.Abs(i) % 2 == 1)
-//    {
-//        soma+=i;
-//    }
-//}
-
-//Console.WriteLine(soma);
-
-//int[] vetor_exemplo = new int[10];
-//Console.WriteLine("Digite um número:");
-//int numero = Convert.ToInt32(Console.ReadLine());
-
-//vetor_exemplo[0] = numero;
-
-//for (int i = 1; i < 10; i++)
-//{
-//    vetor_exemplo[i] = vetor_exemplo[i - 1] * 2;   
-//}
-
-//for (int i = 0;i < 10; i++)
-//{
-//    Console.WriteLine($"N[{i}] = {vetor_exemplo[i]}");
-//}
-
-//const int indice = 1000;
-
-//int[] vetor_exemplo = new int[indice];
-//Console.WriteLine("Digite um número:");
-//int numero = Convert.ToInt32(Console.ReadLine());
-
-//int contador = 0;
-
-//while (contador < indice)
-//{
-//    for (int j = 0; j < numero; j++)
-//    {
-//        vetor_exemplo[contador] = j;        
-
-//        if (++contador >= indice)
-//        {
-//            break;
-//        }
-//    }
-//}
-
-////for (int i = 0; i < indice; i++)
-////{
-
-////}
-
-//for (int i = 0;i < indice; i++)
-//{
-//    Console.WriteLine($"N[{i}] = {vetor_exemplo[i]}");
-//}
+} while (escolha != 8);
 
