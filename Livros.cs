@@ -26,7 +26,7 @@ namespace Teste
                 return false;
             }
         }
-        public bool Editar_Livro(string novo_livro, Livros livro)
+        public static bool Editar_Livro(string novo_livro, Livros livro)
         {
             try
             {

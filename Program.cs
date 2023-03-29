@@ -1,7 +1,4 @@
-﻿
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-using Teste;
+﻿using Teste;
 
 // Menu
 
@@ -102,7 +99,6 @@ do
                 {
                     Console.WriteLine($"{i + 1}. {autores[i].nome_autor}");
                 }
-
                 Console.WriteLine("");
                 Console.WriteLine("Aperte \"ENTER\" para voltar");
                 Console.ReadLine();
@@ -179,6 +175,10 @@ do
             }
             break;
         case 4:
+            
+            Livros livro = new Livros();
+            bool livro_ja_cadastrado = false;
+            
             Console.Clear();
 
             Console.WriteLine("");
@@ -190,20 +190,24 @@ do
                 Console.WriteLine($"{i + 1} - {autores[i].nome_autor}");
             }
 
-            escolha = Convert.ToInt32(Console.ReadLine());
+            string indice_autor = Console.ReadLine();
+
+            escolha = f1.Verifica_Nomes(indice_autor) == true ? 0 : Convert.ToInt32(indice_autor);            
 
             while (escolha > autores.Count || escolha <= 0)
             {
                 Console.Write("Autor inválido, informe novamente o código do autor: ");
 
-                escolha = Convert.ToInt32(Console.ReadLine());
+                indice_autor = Console.ReadLine();
+
+                escolha = f1.Verifica_Nomes(indice_autor) == true ? 0 : Convert.ToInt32(indice_autor);                
             }
 
             Console.Write("Informe o nome do livro: ");
 
             string nome_livro = Console.ReadLine();
 
-            bool livro_ja_cadastrado = false;
+            
 
             foreach (Livros l1 in livros)
             {
@@ -221,7 +225,7 @@ do
 
             if (livro_ja_cadastrado == false)
             {
-                Livros livro = new Livros();
+                
 
                 if (livro.Cadastrar_Livro(nome_livro, autores[escolha - 1]) == true)
                 {
@@ -274,17 +278,28 @@ do
         case 6:
             Console.Clear();
 
-            Console.WriteLine("");
-            Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
-            Console.WriteLine("");
+            //Livros livro = new Livros();
 
             if (livros.Count > 0)
             {
+                Console.WriteLine("");
+                Console.WriteLine("Lista dos Livros cadastrados no sistema: ");
+                Console.WriteLine("");
+                
+
                 for (int i = 0; i < livros.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. (livro: {livros[i].nome_livro}) - (autor: {livros[i].autor.nome_autor})");
                 }
-                Console.ReadLine();
+                
+                escolha = Convert.ToInt32( Console.ReadLine() );
+
+                while (escolha > livros.Count || escolha <= 0)
+                {
+                    Console.Write("Livro inválido, informe novamente o código do livro que deseja editar. ");
+
+                    escolha = Convert.ToInt32(Console.ReadLine());
+                }
             }
             else
             {
@@ -293,6 +308,33 @@ do
                 Console.WriteLine("Aperte \"ENTER\" para voltar");
                 Console.ReadLine();
             }
+
+            Console.WriteLine("");
+            Console.WriteLine("Digite um novo nome para o livro.");
+
+            string novaEscolha2 = Console.ReadLine();
+
+            foreach (Livros l2 in livros)
+            {
+                if (l2.nome_livro.ToUpper().Equals(novaEscolha2.ToUpper()))
+                {
+                    Console.WriteLine("Já foi cadastrado um livro com esse nome.");
+                    Console.WriteLine("");
+                    Console.WriteLine("Digite um nome de livro valido.");
+                    Console.WriteLine("");
+                    novaEscolha2 = Console.ReadLine();
+                    break;
+                }
+            }
+
+            if (Livros.Editar_Livro(novaEscolha2, livros[escolha - 1]) == true)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Livro editado com sucesso!");
+            }
+
+            Console.ReadLine();
+
             break;            
         case 7:
             Console.Clear();
